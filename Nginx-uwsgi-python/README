@@ -1,0 +1,3 @@
+apt-get install uwsgi-plugin-python
+
+# Add plugins = python in uwsgi config file
