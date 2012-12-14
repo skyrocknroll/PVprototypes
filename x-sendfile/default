@@ -1,3 +1,7 @@
+
+
+
+#http://www.nginx-discovery.com/2011/05/day-51-proxypass-and-resolver.html
 	
 server {
 
@@ -25,6 +29,7 @@ server {
 
 
 	location ^~ /pvss {
+	resolver 8.8.8.8;
 	location ~ "^/pvss/(.*)/(.*)" {
 
 	#	internal;
