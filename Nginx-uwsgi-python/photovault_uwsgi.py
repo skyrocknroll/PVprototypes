@@ -1,6 +1,7 @@
 import cherrypy
 import re
 import os
+sys.path.append('/home/yuva/photovault/prototypes/PVprototypes/Nginx-uwsgi-python')
 def noBodyProcess():
     """Sets cherrypy.request.process_request_body = False, giving
     us direct control of the file upload destination. By default

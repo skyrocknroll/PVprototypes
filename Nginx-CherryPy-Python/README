@@ -1,3 +1,11 @@
 apt-get install python-cherrypy
 
-pyhton photovault.py
+wget http://download.cherrypy.org/cherrypy/3.2.2/CherryPy-3.2.2.tar.gz
+
+tar -xvf CherryPy-3.2.2.tar.gz
+
+cd CherryPy-3.2.2
+python setup.py install
+
+
+python photovault.py

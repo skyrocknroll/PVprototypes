@@ -1,3 +1,10 @@
 apt-get install uwsgi-plugin-python
 
+wget http://download.cherrypy.org/cherrypy/3.2.2/CherryPy-3.2.2.tar.gz
+
+tar -xvf CherryPy-3.2.2.tar.gz
+
+cd CherryPy-3.2.2
+python setup.py install
+
 # Add plugins = python in uwsgi config file
