@@ -1,7 +1,9 @@
 import cherrypy
 import re
 import os
-sys.path.append('/home/yuva/photovault/prototypes/PVprototypes/Nginx-uwsgi-python')
+import datetime
+import random
+#sys.path.append('/home/yuva/photovault/prototypes/PVprototypes/Nginx-uwsgi-python')
 def noBodyProcess():
     """Sets cherrypy.request.process_request_body = False, giving
     us direct control of the file upload destination. By default
@@ -16,7 +18,7 @@ class server(object):
     @cherrypy.expose
     def default(self,*args,**kwargs):
         url = cherrypy.request.path_info
-        uploadsDir = "/files/pvss/"
+        uploadsDir = "/files"
         if cherrypy.request.method == "POST":                
             match = re.search("[/]$", url )
             if match:
@@ -24,12 +26,13 @@ class server(object):
             else:
                 x = url.split('/')
                 filename =  x[(len(x)-1)]
-                fileLocation = uploadsDir + url
+		randfileName = datetime.datetime.now().strftime("%Y%m%d%H%M%s%s") + str(random.random()).split(".")[1]+filename
                 folderLocation = uploadsDir + (url.replace(filename , ""))
+                fileLocation = folderLocation + randfileName
                 print folderLocation
                 d = os.path.dirname(folderLocation)
                 if not os.path.exists(d):
-                    print " Making Directory!!!"
+                    print " Making Directory!!!"+d
                     os.makedirs(d)
                 if os.path.exists(fileLocation):
                     raise cherrypy.HTTPError("403 Forbidden", "You are not allowed to do this operation in this URI")
@@ -37,19 +40,17 @@ class server(object):
 #                    raise cherrypy.HTTPError("403 Forbidden", "You are not allowed to do this operation in this URI")
 #                cl = cherrypy.request.headers['Content-Length']
 #                rawbody = cherrypy.request.body.read(int(cl))
-                size = 0 
                 uploadFile = open(fileLocation,"wb")
                 while True:
                     data = cherrypy.request.body.read(8192)
                     if not data:
                         break
-                    size += len(data)
                     uploadFile.write(data)
                 uploadFile.close()
                 return "File SuccessFully Uploaded to " + url
         
         else:
-            return "I am Not Supposed to be invoked using *** method"
+            return "I am Not Supposed to be invoked using "+cherrypy.request.method+" method"
 #       
 #    def handleUrl(self,url):
 #       

@@ -1,31 +1,71 @@
+#PhotoVault Uwsgi Server and Nginix Configuration
 server {
 
         listen   80;
+	upstream photovault_uploads {
+		## Add you backend servers here one server in one line
+		server localhost:9080
+		
+	}
 
         server_name  localhost;
+	## If the request URL is http://localhost/pvss//sdev1/20/23/123.jpg 
+	## then it will be changed to http://localhost/pvss/sdev1/20/23/123.jpg
+	## merges doubles slashes in single slash
 	merge_slashes on;
-        #access_log  /var/log/nginx/localhost.access.log;
-	access_log off;
-	root /files;
-        index index.html index.htm;
+	## Access log location. For each request one log entry will be done
+        access_log  /var/log/nginx/localhost.access.log;
+	## Error log location. For each failed request one log entry will be done
+	error_log  /var/log/nginx/localhost.error.log;
+	#access_log off;
+
+	## Will display approximate file size kb , mb , gb instead displaying in bytes
+	autoindex_exact_size on;
+
+	## turns of directory listing
+	autoindex off;
+
+	## Time to mark a request as read time out when the backend server fails to read the nginx server
+	#proxy_read_timeout 10800;
+	## Time to mark a response as send time out when the backend server fails to send all the data to nginx 
+	#proxy_send_timeout 10800;
+	## Within this time the response should be delivered
+	#send_timeout 10800;
+	
+	#root /files;
+        #index index.html index.htm;
+
+	## Making use of browser cache using the If Modified Since Header 
 	if_modified_since before;
 
-        # Make site accessible from http://localhost/
+        ##  Make site accessible from http://localhost/
         server_name localhost;
+	## Make the client body maximum size 2GB. 
         client_max_body_size 2048m;
 
         location / {
-                # First attempt to serve request as file, then
-                # as directory, then fall back to index.html
-		autoindex on;	
-                include uwsgi_params;
+		## enable auto index so that files can be verified 
+		## using the browser
+		autoindex on;
+		## Time to mark a request as read time out when the backend server fails to read the nginx server
+        	uwsgi_read_timeout 6000;
+        	## Time to mark a response as send time out when the backend server fails to send all the data to nginx 
+        	uwsgi_send_timeout 6000;
+
+
+    		include uwsgi_params;
+
+    		uwsgi_param X-Forwarded-Proto http;
+    		uwsgi_param X-Real-IP $remote_addr;
+    		uwsgi_param Host $http_host;
+
 
 		 if ($request_method = POST)
 
 
                 {
 			#proxy_pass http://localhost:9090;
-			uwsgi_pass 127.0.0.1:3031;
+			uwsgi_pass photovalt_uploads;
 			#include uwsgi_params;
 
            	}
