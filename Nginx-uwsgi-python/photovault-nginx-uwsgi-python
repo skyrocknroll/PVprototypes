@@ -20,7 +20,7 @@ server {
 	#access_log off;
 
 	## Will display approximate file size kb , mb , gb instead displaying in bytes
-	autoindex_exact_size on;
+	autoindex_exact_size off;
 
 	## turns of directory listing
 	autoindex off;
