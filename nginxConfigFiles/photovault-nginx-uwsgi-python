@@ -19,11 +19,6 @@ server {
 	## turns of directory listing
 	autoindex off;
 
-	## Time to mark a request as read time out when the backend server fails to read the nginx server
-	#proxy_read_timeout 10800;
-	
-	## Time to mark a response as send time out when the backend server fails to send all the data to nginx 
-	#proxy_send_timeout 10800;
 	
 	## Within this time the response should be delivered
 	#send_timeout 10800;
