@@ -6,18 +6,9 @@ import datetime
 def application(environ, start_response):
     input = environ['wsgi.input']
     path = environ['PATH_INFO']
-    if(os.environ.get('currentDisk') is None):
-        os.environ['currentDisk'] = '1'
-    
-    selectedDisk = "sdev" + os.environ['currentDisk']
-    #print "SelectedDisk "+selectedDisk
-    path = path.replace("sdevx",selectedDisk)
-    #print path
-    nextDisk = int(os.environ['currentDisk'])+1
-    if nextDisk == 9:
-        nextDisk = 1
-    os.environ['currentDisk'] = str(nextDisk)
-    #print "Current Disk "+os.environ['currentDisk']
+    os.environ['pvdisk'] = '1'
+    selectedDisk = "sdev"+os.environ['pvdisk']
+    path.replace("sdevx",selectedDisk)
     method = environ['REQUEST_METHOD']
     uploadsDir = "/files"
     if method == "POST":        
@@ -32,7 +23,7 @@ def application(environ, start_response):
             folderLocation = uploadsDir + (path.replace(filename , ""))
             fileLocation = folderLocation + randfileName
             #fileLocation = folderLocation + filename
-            #print folderLocation
+            print folderLocation
             d = os.path.dirname(folderLocation)
             if not os.path.exists(d):
                 print " Making Directory!!!"+d
