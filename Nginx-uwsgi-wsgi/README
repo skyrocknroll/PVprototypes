@@ -1,0 +1,3 @@
+To start the server
+
+uwsgi --ini uwsgi.ini
